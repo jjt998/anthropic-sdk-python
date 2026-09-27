@@ -51,6 +51,10 @@ class ToolError(Exception):
         if isinstance(content, str):
             message = content
         else:
+            # The content may be a one-shot iterable (for example, a generator).
+            # Materialize it before building the message so the structured
+            # content remains available to the tool runner.
+            content = list(content)
             parts: list[str] = []
             for block in content:
                 text = block.get("text")
